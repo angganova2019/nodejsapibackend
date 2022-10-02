@@ -1,0 +1,33 @@
+version: '3.3'
+
+services:
+  app:
+    container_name: 'app'
+    build: .
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+    ports:
+      - 3000:3000
+    stdin_open: true
+    environment:
+      - PORT=3000
+      - MYSQL_PORT=3306
+      - MYSQL_HOST=172.17.0.1
+      - MYSQL_USER=angga
+      - MYSQL_PASSWORD=secret
+      - MYSQL_DB=todo4
+    command: npm start
+    depends_on:
+      - mysql_server
+      
+  mysql_server:
+    image: mysql:8.0
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/0_init.sql
+      - $HOME/database:/var/lib/mysql
+    environment: 
+      - MYSQL_DATABASE=todo4
+      - MYSQL_USER=angga
+      - MYSQL_PASSWORD=secret
+      - MYSQL_ROOT_PASSWORD=secret

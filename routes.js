@@ -1,12 +1,10 @@
-// const { addBookHandler, getAllBooksHandler } = require("./handler");
+const { getAllUser } = require('./handler');
 
 const routes = [
     {
         method: 'GET',
-        path: '/',
-        handler: (request, h) => {
-            return `Hello World!`
-        },
+        path: '/activity-groups',
+        handler: getAllUser,
     },
 
 ];
