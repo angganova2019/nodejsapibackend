@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/angganova2019/nodejsapibackend/issues"
   },
-  "homepage": "https://github.com/angganova2019/nodejsapibackend#readme"
+  "homepage": "https://github.com/angganova2019/nodejsapibackend#readme",
+  "dependencies": {
+    "@hapi/hapi": "^20.2.2"
+  }
 }
