@@ -1,6 +1,25 @@
-version: '3.3'
+version: '3.8'
 
 services:
+  mysql_server:
+    image: mysql:8.0
+    container_name: mysqlcontainer
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/0_init.sql
+      - $HOME/database:/var/lib/mysql
+    ports:
+      - 3306:3306
+    expose:
+      - 3306
+    environment: 
+      - MYSQL_DATABASE=todo4
+      - MYSQL_USER=angga
+      - MYSQL_PASSWORD=secret
+      - MYSQL_ROOT_PASSWORD=secret
+    networks:
+      - internalnet
+
+
   app:
     container_name: 'app'
     build: .
@@ -8,26 +27,27 @@ services:
       - .:/app
       - node_modules:/app/node_modules
     ports:
-      - 3000:3000
+      - 3030:3030
+    expose:
+     - 3030
     stdin_open: true
     environment:
-      - PORT=3000
+      - PORT=3030
+      - HOST=localhost
       - MYSQL_PORT=3306
-      - MYSQL_HOST=172.17.0.1
+      - MYSQL_HOST=mysql_server
       - MYSQL_USER=angga
       - MYSQL_PASSWORD=secret
       - MYSQL_DB=todo4
-    command: npm start
-    depends_on:
+    depends_on: 
       - mysql_server
+    command: npm run start
+    networks:
+      - internalnet
       
-  mysql_server:
-    image: mysql:8.0
-    volumes:
-      - ./init.sql:/docker-entrypoint-initdb.d/0_init.sql
-      - $HOME/database:/var/lib/mysql
-    environment: 
-      - MYSQL_DATABASE=todo4
-      - MYSQL_USER=angga
-      - MYSQL_PASSWORD=secret
-      - MYSQL_ROOT_PASSWORD=secret
+volumes:
+  node_modules:
+  
+networks:
+  internalnet:
+    driver: bridge

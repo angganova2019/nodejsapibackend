@@ -1,12 +1,16 @@
-const { getAllUser } = require('./handler');
+const getAllUser = require('./handler');
 
 const routes = [
     {
         method: 'GET',
         path: '/activity-groups',
-        handler: getAllUser,
+        handler: () => { return 'Hello world'; },
     },
-
+    {
+        method: 'GET',
+        path: '/',
+        handler: () => { return 'Hello Halaman Utama'; },
+    },
 ];
 
 module.exports = routes;

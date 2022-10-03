@@ -1,6 +1,6 @@
 const mysql = require('mysql');
 
-const mysqlConfig = mysql.createPool({
+const db = mysql.createPool({
     host: process.env.MYSQL_HOST,
     port: process.env.MYSQL_PORT,
     user: process.env.MYSQL_USER,
@@ -8,4 +8,4 @@ const mysqlConfig = mysql.createPool({
     database: process.env.MYSQL_DB
 });
 
-module.exports = mysqlConfig;
+module.exports = db;

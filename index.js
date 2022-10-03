@@ -1,14 +1,10 @@
 const Hapi = require('@hapi/hapi');
 const routes = require('./routes');
 
-
-
-let con = null
-
 const init = async () => {
     const server = Hapi.server({
-        port: process.env.PORT || 3000,
-        host: process.env.MYSQL_HOST || 'localhost',
+        port: process.env.PORT || 3030,
+        host: process.env.HOST || 'localhost',
         routes: {
             cors: {
                 origin: ['*'],

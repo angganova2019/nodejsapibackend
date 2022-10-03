@@ -1,11 +1,14 @@
-const mysqlConfig = require('./mysql.config');
+const db = require('./mysql.config');
 
-const getAllUsers = () => ({
-    status: 'Success',
-    message: 'Success',
-    data: {
-        mysqlConfig.query('SELECT * FROM users', (error, results) => { results })
-    }
-});
+const getAllUsers = (request, h) => {
 
-module.exports = { getAllUsers };
+    db.query('SELECT * FROM users', (error, results) => {
+        return h.response({
+            status: 'Success',
+            message: 'Success',
+            data: results
+        });
+    });
+};
+
+module.exports = getAllUsers;
