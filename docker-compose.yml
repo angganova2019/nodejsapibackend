@@ -4,13 +4,13 @@ services:
   mysql_server:
     image: mysql:8.0
     container_name: mysqlcontainer
+    restart: unless-stopped
     volumes:
-      - ./init.sql:/docker-entrypoint-initdb.d/0_init.sql
-      - $HOME/database:/var/lib/mysql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     ports: 
-      - "3306:3306"
+      - 3306:3306
     expose:
-      - "3306"
+      - 3306
     environment:
       - MYSQL_DATABASE=todo4
       - MYSQL_USER=angga
@@ -20,16 +20,16 @@ services:
       - internalnet
 
   app:
-    container_name: 'app'
+    container_name: app
     build: .
     volumes:
       - .:/app
     ports: 
-      - "3030:3030"
+      - 3030:3030
     stdin_open: true
     environment:
       PORT: 3030
-      HOST: localhost
+      HOST: 0.0.0.0
       MYSQL_PORT: 3306
       MYSQL_HOST: mysql_server
       MYSQL_USER: angga

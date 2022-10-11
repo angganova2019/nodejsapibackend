@@ -1,15 +1,26 @@
-const getAllUser = require('./handler');
+const { getAllUser, getOne, createUser, updateUser } = require("./users");
+
 
 const routes = [
     {
         method: 'GET',
         path: '/activity-groups',
-        handler: () => { return 'Hello world'; },
+        handler: getAllUser,
     },
     {
         method: 'GET',
-        path: '/',
-        handler: () => { return 'Hello Halaman Utama'; },
+        path: '/activity-groups/{id}',
+        handler: getOne,
+    },
+    {
+        method: 'POST',
+        path: '/activity-groups',
+        handler: createUser,
+    },
+    {
+        method: 'PATCH',
+        path: '/activity-groups/{id}',
+        handler: updateUser,
     },
 ];
 

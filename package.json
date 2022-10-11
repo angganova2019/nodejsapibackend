@@ -18,7 +18,8 @@
   "homepage": "https://github.com/angganova2019/nodejsapibackend#readme",
   "dependencies": {
     "@hapi/hapi": "^20.2.2",
-    "mysql": "^2.18.1",
-    "nodemon": "^2.0.20"
+    "mysql2": "^2.3.3",
+    "nodemon": "^2.0.20",
+    "sequelize": "^6.25.0"
   }
 }
