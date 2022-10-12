@@ -16,8 +16,6 @@ services:
       - MYSQL_USER=angga
       - MYSQL_PASSWORD=secret
       - MYSQL_ROOT_PASSWORD=secret
-    networks:
-      - internalnet
 
   app:
     container_name: app
@@ -26,6 +24,8 @@ services:
       - .:/app
     ports: 
       - 3030:3030
+    expose:
+      - 3030
     stdin_open: true
     environment:
       PORT: 3030
@@ -37,9 +37,4 @@ services:
       MYSQL_DB: todo4
     depends_on:
       - mysql_server
-    networks:
-      - internalnet
-
-networks:
-  internalnet:
-    driver: bridge
+    command: ["npm", "run", "start"]

@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const { db } = require('./mysql.config');
 
-const User = db.define('users', {
+const Activity = db.define('activity', {
     id: {
         type: DataTypes.BIGINT,
         autoIncrement: true,
@@ -36,8 +36,8 @@ const User = db.define('users', {
     });
 
 
-module.exports.getAllUser = async (request, h) => {
-    const datauser = await User.findAll();
+module.exports.getAll = async (request, h) => {
+    const datauser = await Activity.findAll();
     return h.response({
         status: 'Success',
         message: 'Success',
@@ -48,11 +48,11 @@ module.exports.getAllUser = async (request, h) => {
 module.exports.getOne = async (request, h) => {
     const { id } = request.params;
 
-    const datauser = await User.findByPk(id);
+    const datauser = await Activity.findByPk(id);
     if (datauser === null) {
         return h.response({
             status: 'Not Found',
-            message: 'Activity with ID 8328923 Not Found',
+            message: `Activity with ID ${id} Not Found`,
             data: {}
         }).code(404);
     } else {
@@ -73,21 +73,21 @@ module.exports.createUser = async (request, h) => {
             data: {},
         }).code(400);
     };
-    if (email === null) {
-        return h.response({
-            status: 'Bad Request',
-            message: 'email cannot be null',
-            data: {},
-        }).code(400);
-    };
-    console.log(email, title);
-    const addUser = await User.create({ email: email, title: title });
-    console.log('Hasil create: ', addUser);
-
+    
+    const addUser = await Activity.create({ email, title }).then(async(res)=>{
+        return await Activity.findByPk(res.id);
+    });
+    
     const response = h.response({
         status: 'Success',
         message: 'Success',
-        data: addUser,
+        data: {
+            created_at: addUser.created_at,
+            updated_at: addUser.updated_at,
+            id: addUser.id,
+            title: addUser.title,
+            email: addUser.email,
+        },
     });
     response.code(201);
     return response;
@@ -96,24 +96,17 @@ module.exports.createUser = async (request, h) => {
 
 module.exports.updateUser = async (request, h) => {
     const { id } = request.params;
-    const { email = null, title = null } = request.payload;
+    const { title = null } = request.payload;
 
-    const datauser = await User.findByPk(id);
+    const datauser = await Activity.findByPk(id);
     if (datauser === null) {
         return h.response({
             status: "Not Found",
-            message: "Activity with ID ${id} Not Found",
+            message: `Activity with ID ${id} Not Found`,
             data: {}
         }).code(404);
     }
 
-    if (email === null) {
-        return h.response({
-            status: "Bad Request",
-            message: "email cannot be null",
-            data: {}
-        }).code(400);
-    }
     if (title === null) {
         return h.response({
             status: "Bad Request",
@@ -122,9 +115,35 @@ module.exports.updateUser = async (request, h) => {
         }).code(400);
     }
 
-    const updateduser = await User.update({ email, title }, { where: { id } });
-    return h.response({
-        status: 'OK',
-        data: updateduser
-    });
+    const updateduser = await Activity.update({ title }, { where: { id } });
+    if(updateduser[0] > 0){
+        const dt = await Activity.findByPk(id);
+        return h.response({
+            status: 'Success',
+            message: 'Success',
+            data: dt
+        }).code(200);
+    } else {
+        return h.response().code(500);
+    }
+};
+
+module.exports.deleteUser = async (request, h) => {
+    const { id } = request.params;
+    const userdel = await Activity.findByPk(id);
+
+    if (userdel !== null) {
+        const d = await Activity.destroy({ where: { id } });
+        return h.response({
+            status: 'Success',
+            message: 'Success',
+            data: {}
+        });
+    } else {
+        return h.response({
+            status: 'Not Found',
+            message: `Activity with ID ${id} Not Found`,
+            data: {}
+        }).code(404);
+    }
 };
