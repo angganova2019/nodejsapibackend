@@ -34,7 +34,7 @@ services:
       MYSQL_HOST: mysql_server
       MYSQL_USER: angga
       MYSQL_PASSWORD: secret
-      MYSQL_DB: todo4
+      MYSQL_DBNAME: todo4
     depends_on:
       - mysql_server
     command: ["npm", "run", "start"]

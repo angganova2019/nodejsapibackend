@@ -1,5 +1,5 @@
 const { getAll, getOne, createUser, updateUser, deleteUser } = require("./activity");
-const { getAllTodo, getOneTodo, createTodo, deleteTodo } = require("./todo");
+const { getAllTodo, getOneTodo, createTodo, deleteTodo, updateTodo } = require("./todo");
 
 
 const routes = [
@@ -49,6 +49,11 @@ const routes = [
         method: 'POST',
         path: '/todo-items',
         handler: createTodo,
+    },
+    {
+        method: 'PATCH',
+        path: '/todo-items/{id}',
+        handler: updateTodo,
     },
     {
         method: 'DELETE',
