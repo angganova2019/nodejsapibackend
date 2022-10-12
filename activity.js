@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const { db } = require('./mysql.config');
 
-const Activity = db.define('activity', {
+const Activity = db.define('activities', {
     id: {
         type: DataTypes.BIGINT,
         autoIncrement: true,
@@ -73,11 +73,11 @@ module.exports.createUser = async (request, h) => {
             data: {},
         }).code(400);
     };
-    
-    const addUser = await Activity.create({ email, title }).then(async(res)=>{
+
+    const addUser = await Activity.create({ email, title }).then(async (res) => {
         return await Activity.findByPk(res.id);
     });
-    
+
     const response = h.response({
         status: 'Success',
         message: 'Success',
@@ -116,7 +116,7 @@ module.exports.updateUser = async (request, h) => {
     }
 
     const updateduser = await Activity.update({ title }, { where: { id } });
-    if(updateduser[0] > 0){
+    if (updateduser[0] > 0) {
         const dt = await Activity.findByPk(id);
         return h.response({
             status: 'Success',

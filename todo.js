@@ -1,7 +1,7 @@
 const { DataTypes } = require('sequelize');
 const { db } = require('./mysql.config');
 
-const Todo = db.define('todo', {
+const Todo = db.define('todos', {
     id: {
         type: DataTypes.BIGINT,
         autoIncrement: true,
