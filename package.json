@@ -1,5 +1,5 @@
 {
-  "name": "nodejsapibackend",
+  "name": "backend-api",
   "version": "1.0.0",
   "description": "NodeJS API with Mysql",
   "main": "index.js",

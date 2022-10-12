@@ -1,22 +1,7 @@
 version: "3.8"
 
+    
 services:
-  mysql_server:
-    image: mysql:8.0
-    container_name: mysqlcontainer
-    restart: unless-stopped
-    volumes:
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-    ports: 
-      - 3306:3306
-    expose:
-      - 3306
-    environment:
-      - MYSQL_DATABASE=todo4
-      - MYSQL_USER=angga
-      - MYSQL_PASSWORD=secret
-      - MYSQL_ROOT_PASSWORD=secret
-
   app:
     container_name: app
     build: .
@@ -35,6 +20,28 @@ services:
       MYSQL_USER: angga
       MYSQL_PASSWORD: secret
       MYSQL_DBNAME: todo4
-    depends_on:
-      - mysql_server
-    command: ["npm", "run", "start"]
+    networks:
+      - app-network
+    command: ["./wait-for-it.sh", "mysql_server:3306", "--", "npm", "run", "start"]
+
+  mysql_server:
+    image: mysql:8.0
+    container_name: mysqlcontainer
+    restart: unless-stopped
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports: 
+      - 3306:3306
+    expose:
+      - 3306
+    environment:
+      - MYSQL_DATABASE=todo4
+      - MYSQL_USER=angga
+      - MYSQL_PASSWORD=secret
+      - MYSQL_ROOT_PASSWORD=secret
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
