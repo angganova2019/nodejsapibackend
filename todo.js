@@ -156,9 +156,8 @@ module.exports.updateTodo = async (request, h) => {
         }).code(404);
     }
 
-    let updatedtodo = [];
     if (title === null) {
-        updatedtodo = await Todo.update({ priority }, { where: { id } });
+        await Todo.update({ priority }, { where: { id } });
         const dt = await Todo.findByPk(id);
         return h.response({
             status: 'Success',
@@ -169,7 +168,7 @@ module.exports.updateTodo = async (request, h) => {
             }
         }).code(200);
     } else {
-        updatedtodo = await Todo.update({ title, priority }, { where: { id } });
+        await Todo.update({ title, priority }, { where: { id } });
         const dt = await Todo.findByPk(id);
         return h.response({
             status: 'Success',

@@ -1,29 +1,6 @@
 version: "3.8"
 
-    
 services:
-  app:
-    container_name: app
-    build: .
-    volumes:
-      - .:/app
-    ports: 
-      - 3030:3030
-    expose:
-      - 3030
-    stdin_open: true
-    environment:
-      PORT: 3030
-      HOST: 0.0.0.0
-      MYSQL_PORT: 3306
-      MYSQL_HOST: mysql_server
-      MYSQL_USER: angga
-      MYSQL_PASSWORD: secret
-      MYSQL_DBNAME: todo4
-    networks:
-      - app-network
-    command: ["./wait-for-it.sh", "mysql_server:3306", "--", "npm", "run", "start"]
-
   mysql_server:
     image: mysql:8.0
     container_name: mysqlcontainer
@@ -41,6 +18,30 @@ services:
       - MYSQL_ROOT_PASSWORD=secret
     networks:
       - app-network
+
+  app:
+    container_name: app
+    build: .
+    restart: unless-stopped
+    volumes:
+      - .:/app
+    ports: 
+      - 3030:3030
+    expose:
+      - 3030
+    stdin_open: true
+    environment:
+      PORT: 3030
+      HOST: 0.0.0.0
+      MYSQL_PORT: 3306
+      MYSQL_HOST: mysql_server
+      MYSQL_USER: angga
+      MYSQL_PASSWORD: secret
+      MYSQL_DBNAME: todo4
+    networks:
+      - app-network
+    depends_on:
+      - mysql_server
 
 networks:
   app-network:

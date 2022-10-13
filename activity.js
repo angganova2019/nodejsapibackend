@@ -59,7 +59,11 @@ module.exports.getOne = async (request, h) => {
         return h.response({
             status: 'Success',
             message: 'Success',
-            data: datauser
+            data: {
+                id: datauser.id,
+                title: datauser.title,
+                email: datauser.email
+            }
         });
     }
 };
@@ -107,25 +111,13 @@ module.exports.updateUser = async (request, h) => {
         }).code(404);
     }
 
-    if (title === null) {
-        return h.response({
-            status: "Bad Request",
-            message: "title cannot be null",
-            data: {}
-        }).code(400);
-    }
-
-    const updateduser = await Activity.update({ title }, { where: { id } });
-    if (updateduser[0] > 0) {
-        const dt = await Activity.findByPk(id);
-        return h.response({
-            status: 'Success',
-            message: 'Success',
-            data: dt
-        }).code(200);
-    } else {
-        return h.response().code(500);
-    }
+    await Activity.update({ title }, { where: { id } });
+    const dt = await Activity.findByPk(id);
+    return h.response({
+        status: 'Success',
+        message: 'Success',
+        data: dt
+    }).code(200);
 };
 
 module.exports.deleteUser = async (request, h) => {
