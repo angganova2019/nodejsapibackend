@@ -8,7 +8,7 @@ const Todo = db.define('todos', {
         primaryKey: true
     },
     activity_group_id: {
-        type: DataTypes.STRING
+        type: DataTypes.INTEGER
     },
     title: {
         type: DataTypes.STRING
@@ -40,6 +40,8 @@ const Todo = db.define('todos', {
         updatedAt: 'updated_at',
         createdAt: 'created_at',
     });
+
+module.exports = { dbtodo: db };
 
 module.exports.getAllTodo = async (request, h) => {
     const { activity_group_id = null } = request.query;

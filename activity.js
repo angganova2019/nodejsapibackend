@@ -35,6 +35,7 @@ const Activity = db.define('activities', {
         createdAt: 'created_at',
     });
 
+module.exports = { dbactivity: db };
 
 module.exports.getAll = async (request, h) => {
     const datauser = await Activity.findAll();
