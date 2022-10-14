@@ -40,6 +40,7 @@ services:
       - app-network
     depends_on:
       - mysql_server
+    command: npm run start && npm run migrate
 
 networks:
   app-network:

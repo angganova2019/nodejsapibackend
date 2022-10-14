@@ -38,11 +38,10 @@ const Activity = db.define('activities', {
 module.exports = { dbactivity: db };
 
 module.exports.getAll = async (request, h) => {
-    const datauser = await Activity.findAll();
     return h.response({
         status: 'Success',
         message: 'Success',
-        data: datauser,
+        data: await Activity.findAll(),
     });
 };
 
@@ -79,11 +78,9 @@ module.exports.createUser = async (request, h) => {
         }).code(400);
     };
 
-    const addUser = await Activity.create({ email, title }).then(async (res) => {
-        return await Activity.findByPk(res.id);
-    });
+    const addUser = await Activity.create({ email, title });
 
-    const response = h.response({
+    return h.response({
         status: 'Success',
         message: 'Success',
         data: {
@@ -93,10 +90,7 @@ module.exports.createUser = async (request, h) => {
             title: addUser.title,
             email: addUser.email,
         },
-    });
-    response.code(201);
-    return response;
-
+    }).code(201);
 };
 
 module.exports.updateUser = async (request, h) => {
@@ -112,12 +106,11 @@ module.exports.updateUser = async (request, h) => {
         }).code(404);
     }
 
-    await Activity.update({ title }, { where: { id } });
-    const dt = await Activity.findByPk(id);
+    await datauser.update({title});
     return h.response({
         status: 'Success',
         message: 'Success',
-        data: dt
+        data: datauser,
     }).code(200);
 };
 
@@ -126,7 +119,7 @@ module.exports.deleteUser = async (request, h) => {
     const userdel = await Activity.findByPk(id);
 
     if (userdel !== null) {
-        const d = await Activity.destroy({ where: { id } });
+        await userdel.destroy();
         return h.response({
             status: 'Success',
             message: 'Success',

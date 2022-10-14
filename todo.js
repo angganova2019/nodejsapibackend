@@ -102,11 +102,9 @@ module.exports.createTodo = async (request, h) => {
         }).code(400);
     };
 
-    const addtodo = await Todo.create({ activity_group_id: activity_group_id, title: title, is_active: is_active, priority: priority }).then(async (res) => {
-        return await Todo.findByPk(res.id);
-    });
+    const addtodo = await Todo.create({ activity_group_id, title, is_active, priority });
 
-    const response = h.response({
+    return h.response({
         status: 'Success',
         message: 'Success',
         data: {
@@ -118,9 +116,7 @@ module.exports.createTodo = async (request, h) => {
             is_active: !!addtodo.is_active,
             priority: addtodo.priority
         },
-    });
-    response.code(201);
-    return response;
+    }).code(201);
 };
 
 module.exports.deleteTodo = async (request, h) => {
@@ -128,8 +124,7 @@ module.exports.deleteTodo = async (request, h) => {
     const del = await Todo.findByPk(id);
 
     if (del !== null) {
-        const d = await Todo.destroy({ where: { id } });
-        console.log("hapus: ", d);
+        await del.destroy();
         return h.response({
             status: 'Success',
             message: 'Success',
@@ -159,25 +154,23 @@ module.exports.updateTodo = async (request, h) => {
     }
 
     if (title === null) {
-        await Todo.update({ priority }, { where: { id } });
-        const dt = await Todo.findByPk(id);
+        await result.update({priority});
         return h.response({
             status: 'Success',
             data: {
-                title: dt.title,
-                is_active: dt.is_active,
-                priority: dt.priority
+                title: result.title,
+                is_active: result.is_active,
+                priority: result.priority
             }
         }).code(200);
     } else {
-        await Todo.update({ title, priority }, { where: { id } });
-        const dt = await Todo.findByPk(id);
+        await result.update({title, priority});
         return h.response({
             status: 'Success',
             data: {
-                title: dt.title,
-                is_active: dt.is_active,
-                priority: dt.priority
+                title: result.title,
+                is_active: result.is_active,
+                priority: result.priority
             }
         }).code(200);
     }

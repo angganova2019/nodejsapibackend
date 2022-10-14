@@ -4,8 +4,8 @@
   "description": "NodeJS API with Mysql",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon index.js",
-    "migrate": "node migrate.js"
+    "start": "node index.js",
+    "migrate": "node migrateforce.js"
   },
   "repository": {
     "type": "git",
