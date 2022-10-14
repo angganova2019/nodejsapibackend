@@ -47,14 +47,19 @@ module.exports.getAllTodo = async (request, h) => {
     const { activity_group_id = null } = request.query;
 
     if (activity_group_id === null) {
-        const result = await Todo.findAll();
+        const [result, metadata] = await Activity.query("SELECT * FROM todos");
         return h.response({
             status: 'Success',
             message: 'Success',
             data: result,
         });
     } else {
-        const result = await Todo.findAll({ where: { activity_group_id } });
+        const [result, metadata] = await sequelize.query('SELECT * FROM projects WHERE status = ?',
+            {
+                replacements: [activity_group_id],
+                type: QueryTypes.SELECT
+            }
+        );
         return h.response({
             status: 'Success',
             message: 'Success',
@@ -154,7 +159,7 @@ module.exports.updateTodo = async (request, h) => {
     }
 
     if (title === null) {
-        await result.update({priority});
+        await result.update({ priority });
         return h.response({
             status: 'Success',
             data: {
@@ -164,7 +169,7 @@ module.exports.updateTodo = async (request, h) => {
             }
         }).code(200);
     } else {
-        await result.update({title, priority});
+        await result.update({ title, priority });
         return h.response({
             status: 'Success',
             data: {
