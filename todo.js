@@ -47,23 +47,16 @@ module.exports.getAllTodo = async (request, h) => {
     const { activity_group_id = null } = request.query;
 
     if (activity_group_id === null) {
-        const [result, metadata] = await Activity.query("SELECT * FROM todos");
         return h.response({
             status: 'Success',
             message: 'Success',
-            data: result,
+            data: await Todo.findAll(),
         });
     } else {
-        const [result, metadata] = await sequelize.query('SELECT * FROM projects WHERE status = ?',
-            {
-                replacements: [activity_group_id],
-                type: QueryTypes.SELECT
-            }
-        );
         return h.response({
             status: 'Success',
             message: 'Success',
-            data: result,
+            data: await Todo.findAll({where: { activity_group_id }}),
         });
     }
 

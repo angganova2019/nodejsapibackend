@@ -38,11 +38,10 @@ const Activity = db.define('activities', {
 module.exports = { dbactivity: db };
 
 module.exports.getAll = async (request, h) => {
-    const [result, metadata] = await Activity.query("SELECT * FROM activities");
     return h.response({
         status: 'Success',
         message: 'Success',
-        data: result,
+        data: await Activity.findAll(),
     });
 };
 
