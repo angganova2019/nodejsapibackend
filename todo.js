@@ -1,4 +1,4 @@
-const { DataTypes } = require('sequelize');
+const { DataTypes, QueryTypes } = require('sequelize');
 const { db } = require('./mysql.config');
 
 const Todo = db.define('todos', {
@@ -47,19 +47,14 @@ module.exports.getAllTodo = async (request, h) => {
     const { activity_group_id = null } = request.query;
 
     if (activity_group_id === null) {
-        const [result, metadata] = await Activity.query("SELECT * FROM todos");
+        const [result, metadata] = await db.query("SELECT * FROM todos");
         return h.response({
             status: 'Success',
             message: 'Success',
             data: result,
         });
     } else {
-        const [result, metadata] = await sequelize.query('SELECT * FROM projects WHERE status = ?',
-            {
-                replacements: [activity_group_id],
-                type: QueryTypes.SELECT
-            }
-        );
+        const [result, metadata] = await db.query(`SELECT * FROM todos WHERE activity_group_id = ${activity_group_id}`);
         return h.response({
             status: 'Success',
             message: 'Success',
@@ -107,19 +102,19 @@ module.exports.createTodo = async (request, h) => {
         }).code(400);
     };
 
-    const addtodo = await Todo.create({ activity_group_id, title, is_active, priority });
+    const [addTodo, fields] = await db.query(`INSERT INTO todos(activity_group_id, title, is_active, priority) values('${activity_group_id}', '${title}', '${is_active}', '${priority}')`);
 
     return h.response({
         status: 'Success',
         message: 'Success',
         data: {
-            created_at: addtodo.created_at,
-            updated_at: addtodo.updated_at,
-            id: addtodo.id,
-            activity_group_id: addtodo.activity_group_id,
-            title: addtodo.title,
-            is_active: !!addtodo.is_active,
-            priority: addtodo.priority
+            created_at: addTodo.created_at,
+            updated_at: addTodo.updated_at,
+            id: addTodo.id,
+            activity_group_id: addTodo.activity_group_id,
+            title: addTodo.title,
+            is_active: !!addTodo.is_active,
+            priority: addTodo.priority
         },
     }).code(201);
 };

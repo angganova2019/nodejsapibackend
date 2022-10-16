@@ -38,7 +38,7 @@ const Activity = db.define('activities', {
 module.exports = { dbactivity: db };
 
 module.exports.getAll = async (request, h) => {
-    const [result, metadata] = await Activity.query("SELECT * FROM activities");
+    const [result, metadata] = await db.query("SELECT * FROM activities");
     return h.response({
         status: 'Success',
         message: 'Success',
@@ -79,8 +79,8 @@ module.exports.createUser = async (request, h) => {
         }).code(400);
     };
 
-    const addUser = await Activity.create({ email, title });
-
+    const [addUser, fields] = await db.query(`INSERT INTO activities(email, title) values('${email}', '${title}')`);
+    console.log(addUser);
     return h.response({
         status: 'Success',
         message: 'Success',

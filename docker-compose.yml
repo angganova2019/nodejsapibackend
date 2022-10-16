@@ -5,7 +5,7 @@ services:
     image: mysql:8.0
     container_name: mysqlcontainer
     restart: unless-stopped
-    ports: 
+    ports:
       - 3306:3306
     expose:
       - 3306
@@ -23,7 +23,7 @@ services:
     restart: unless-stopped
     volumes:
       - .:/app
-    ports: 
+    ports:
       - 3030:3030
     expose:
       - 3030
@@ -40,7 +40,6 @@ services:
       - app-network
     depends_on:
       - mysql_server
-    command: npm run start && npm run migrate
 
 networks:
   app-network:
