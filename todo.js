@@ -54,7 +54,7 @@ module.exports.getAllTodo = async (request, h) => {
             data: result,
         });
     } else {
-        const result = await Todo.findAll({ where: { activity_group_id }});
+        const result = await Todo.findAll({ where: { activity_group_id } });
         return h.response({
             status: 'Success',
             message: 'Success',
@@ -102,18 +102,18 @@ module.exports.createTodo = async (request, h) => {
         }).code(400);
     };
 
-    const addTodo = await Todo.create({activity_group_id, title, is_active, priority});
+    const result = await Todo.create({ activity_group_id, title, is_active, priority });
     return h.response({
         status: 'Success',
         message: 'Success',
         data: {
-            created_at: addTodo.created_at,
-            updated_at: addTodo.updated_at,
-            id: addTodo.id,
-            activity_group_id: addTodo.activity_group_id,
-            title: addTodo.title,
-            is_active: !!addTodo.is_active,
-            priority: addTodo.priority
+            created_at: result.created_at,
+            updated_at: result.updated_at,
+            id: result.id,
+            activity_group_id: result.activity_group_id,
+            title: result.title,
+            is_active: !!result.is_active,
+            priority: result.priority
         },
     }).code(201);
 };
@@ -153,7 +153,7 @@ module.exports.updateTodo = async (request, h) => {
     }
 
     if (title === null) {
-        await result.update({priority});
+        await result.update({ priority });
         return h.response({
             status: 'Success',
             data: {
@@ -163,7 +163,7 @@ module.exports.updateTodo = async (request, h) => {
             }
         }).code(200);
     } else {
-        await result.update({title, priority});
+        await result.update({ title, priority });
         return h.response({
             status: 'Success',
             data: {

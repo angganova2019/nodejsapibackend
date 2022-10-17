@@ -1,5 +1,5 @@
 const Hapi = require('@hapi/hapi');
-const { migratedb } = require('./migrate');
+// const { migratedb } = require('./migrate');
 const routes = require('./routes');
 
 

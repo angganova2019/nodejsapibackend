@@ -5,9 +5,10 @@ const sequelize = new Sequelize(process.env.MYSQL_DBNAME, process.env.MYSQL_USER
     port: process.env.MYSQL_PORT,
     dialect: 'mysql',
     pool: {
-        max: 20,
+        max: 150,
         min: 0,
-        idle: 5000,
+        acquire: 10000,
+        idle: 100
     }
 });
 

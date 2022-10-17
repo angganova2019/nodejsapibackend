@@ -1,5 +1,5 @@
-const { DataTypes, QueryTypes } = require('sequelize');
 const { db } = require('./mysql.config');
+
 
 const Activity = db.define('activities', {
     id: {
@@ -37,13 +37,14 @@ const Activity = db.define('activities', {
 
 module.exports = { dbactivity: db };
 
+
 module.exports.getAll = async (request, h) => {
     const result = await Activity.findAll();
     return h.response({
         status: 'Success',
         message: 'Success',
         data: result,
-    });
+    }).code(200);
 };
 
 module.exports.getOne = async (request, h) => {
@@ -78,18 +79,19 @@ module.exports.createUser = async (request, h) => {
             data: {},
         }).code(400);
     };
-    const addUser = await Activity.create({email, title});
+    const result = await Activity.create({ email, title });
     return h.response({
         status: 'Success',
         message: 'Success',
         data: {
-            created_at: addUser.created_at,
-            updated_at: addUser.updated_at,
-            id: addUser.id,
-            title: addUser.title,
-            email: addUser.email,
+            created_at: result.created_at,
+            updated_at: result.updated_at,
+            id: result.id,
+            title: result.title,
+            email: result.email,
         },
     }).code(201);
+
 };
 
 module.exports.updateUser = async (request, h) => {
