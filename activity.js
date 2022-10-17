@@ -1,4 +1,4 @@
-const { DataTypes } = require('sequelize');
+const { DataTypes, QueryTypes } = require('sequelize');
 const { db } = require('./mysql.config');
 
 const Activity = db.define('activities', {
@@ -38,11 +38,11 @@ const Activity = db.define('activities', {
 module.exports = { dbactivity: db };
 
 module.exports.getAll = async (request, h) => {
-    const [result, metadata] = await db.query("SELECT * FROM activities");
+    const result = await Activity.findAll();
     return h.response({
         status: 'Success',
         message: 'Success',
-        data: await Activity.findAll(),
+        data: result,
     });
 };
 
@@ -78,9 +78,7 @@ module.exports.createUser = async (request, h) => {
             data: {},
         }).code(400);
     };
-
-    const [addUser, fields] = await db.query(`INSERT INTO activities(email, title) values('${email}', '${title}')`);
-    console.log(addUser);
+    const addUser = await Activity.create({email, title});
     return h.response({
         status: 'Success',
         message: 'Success',
@@ -98,20 +96,23 @@ module.exports.updateUser = async (request, h) => {
     const { id } = request.params;
     const { title = null } = request.payload;
 
-    const datauser = await Activity.findByPk(id);
-    if (datauser === null) {
+    const data = await Activity.findByPk(id);
+    if (data === null) {
         return h.response({
             status: "Not Found",
             message: `Activity with ID ${id} Not Found`,
             data: {}
         }).code(404);
     }
-
-    await datauser.update({ title });
+    await data.update({ title });
     return h.response({
         status: 'Success',
         message: 'Success',
-        data: datauser,
+        data: {
+            id: data.id,
+            title: data.title,
+            email: data.email
+        },
     }).code(200);
 };
 

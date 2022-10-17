@@ -47,18 +47,18 @@ module.exports.getAllTodo = async (request, h) => {
     const { activity_group_id = null } = request.query;
 
     if (activity_group_id === null) {
-        const [result, metadata] = await db.query("SELECT * FROM todos");
+        const result = await Todo.findAll();
         return h.response({
             status: 'Success',
             message: 'Success',
-            data: await Todo.findAll(),
+            data: result,
         });
     } else {
-        const [result, metadata] = await db.query(`SELECT * FROM todos WHERE activity_group_id = ${activity_group_id}`);
+        const result = await Todo.findAll({ where: { activity_group_id }});
         return h.response({
             status: 'Success',
             message: 'Success',
-            data: await Todo.findAll({where: { activity_group_id }}),
+            data: result,
         });
     }
 
@@ -102,8 +102,7 @@ module.exports.createTodo = async (request, h) => {
         }).code(400);
     };
 
-    const [addTodo, fields] = await db.query(`INSERT INTO todos(activity_group_id, title, is_active, priority) values('${activity_group_id}', '${title}', '${is_active}', '${priority}')`);
-
+    const addTodo = await Todo.create({activity_group_id, title, is_active, priority});
     return h.response({
         status: 'Success',
         message: 'Success',
@@ -121,10 +120,10 @@ module.exports.createTodo = async (request, h) => {
 
 module.exports.deleteTodo = async (request, h) => {
     const { id } = request.params;
-    const del = await Todo.findByPk(id);
+    const result = await Todo.findByPk(id);
 
-    if (del !== null) {
-        await del.destroy();
+    if (result !== null) {
+        await result.destroy();
         return h.response({
             status: 'Success',
             message: 'Success',
@@ -154,7 +153,7 @@ module.exports.updateTodo = async (request, h) => {
     }
 
     if (title === null) {
-        await result.update({ priority });
+        await result.update({priority});
         return h.response({
             status: 'Success',
             data: {
@@ -164,7 +163,7 @@ module.exports.updateTodo = async (request, h) => {
             }
         }).code(200);
     } else {
-        await result.update({ title, priority });
+        await result.update({title, priority});
         return h.response({
             status: 'Success',
             data: {

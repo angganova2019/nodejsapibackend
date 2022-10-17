@@ -1,6 +1,6 @@
 const Hapi = require('@hapi/hapi');
-const routes = require('./routes');
 const { migratedb } = require('./migrate');
+const routes = require('./routes');
 
 
 const init = async () => {
